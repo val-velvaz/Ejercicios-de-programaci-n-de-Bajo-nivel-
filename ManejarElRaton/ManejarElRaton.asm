@@ -1,8 +1,7 @@
- ; dibujo de raton
+; dibujo de raton
                     ; presione el boton izquierdo del raton para dibujar.
                     ; para una prueba real, haga clic en 
                     ; externo->ejecutar desde el menú del emulador.
-                    name "mouse2"
                     org 100h
                     jmp start
                     oldX dw -1
@@ -13,8 +12,7 @@ start:              mov ah, 00
                                     ; , 320x200 pixeles. 
                     int 10h
 
-                    mov ax, 0       ; reinicie el mouse y obtenga su estado 
-                                    ; ax>0 si hay raton, ax=0 si no hay
+                    mov ax, 0                                    ; ax>0 si hay raton, ax=0 si no hay
                     int 33h
                     cmp ax, 0
 check_mouse_button: mov ax, 3       ; Leer el estado de los botones y la posicion
@@ -24,15 +22,15 @@ check_mouse_button: mov ax, 3       ; Leer el estado de los botones y la posicio
                     int 33h 
                     shr cx, 1       ; x/2 - en este modo se reduce el valor de CX a la mitad.
                     cmp bx, 1
-                    jne xor_cursor:
+                    jne xor_cursor
                     mov al, 1010b   ; color de pixel (Verde Claro)
                     jmp draw_pixel
-xor_cursor:         cmp oldX, -1
+xor_cursor:         cmp word [oldX], -1
                     je not_required
                     push cx
                     push dx
-                    mov cx, oldX
-                    mov dx, oldY
+                    mov cx, [oldX]
+                    mov dx, [oldY]
                     mov ah, 0dh     ; Lectura de un punto   
                                     ; DX = numero de region
                                     ; CX = numero de columna
@@ -49,8 +47,8 @@ not_required:       mov ah, 0dh     ; Lectura de un punto
                                     ; AL = punto leido
                     int 10h                         
                     xor al, 1111b   ; Color del pixel Blanco Brillante
-                    mov oldX, cx
-                    mov oldY, dx
+                    mov [oldX], cx
+                    mov [oldY], dx
 draw_pixel:         mov ah, 0ch     ; pone pixel
                     int 10h         ; DX = numero de renglon  (fila)
                                     ; CX = numero de columna
@@ -79,7 +77,7 @@ stop:
                     mov cl, 8
                     int 10h     
                     
-                    mov dx, offset msg
+                    mov dx, msg
                     mov ah, 9
                     int 21h
                     mov ah, 0
