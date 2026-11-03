@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Ensamblar y ejecutar (8086 / DOSBox-X)",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ${workspaceFolder}\\ejecutar.ps1 \"${file}\"",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    }
+  ]
+}
